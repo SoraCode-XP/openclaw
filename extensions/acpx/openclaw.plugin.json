@@ -5,7 +5,7 @@
   "skills": ["./skills"],
   "configSchema": {
     "type": "object",
-    "additionalProperties": false,
+    "additionalProperties": true,
     "properties": {
       "command": {
         "type": "string"
