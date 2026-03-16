@@ -1,0 +1,134 @@
+{ 
+  "agents": {
+    "defaults": {
+      "workspace": "~/.openclaw/workspace",
+      "model": {
+        "primary": "minimax-codeplan/MiniMax-M2.5"
+      },
+      "subagents": {
+        "allowAgents": ["recruiter", "person-info"],
+        "model": "minimax-codeplan/MiniMax-M2.5",
+        "maxSpawnDepth": 1,
+        "maxChildrenPerAgent": 3,
+        "maxConcurrent": 5,
+        "runTimeoutSeconds": 300
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "default": true,
+        "name": "Main Orchestrator",
+        "workspace": "~/.openclaw/workspace",
+        "agentDir": "~/.openclaw/agents/main/agent",
+        "model": {
+          "primary": "minimax-codeplan/MiniMax-M2.5"
+        },
+        "identity": {
+          "name": "Main Assistant",
+          "emoji": "🎯",
+          "theme": "intelligent orchestrator"
+        },
+        "tools": {
+          "allow": [
+            "read",
+            "sessions_spawn",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "session_status",
+            "subagents",
+            "agents_list"
+          ],
+          "deny": ["write", "exec", "bash", "apply_patch"]
+        }
+      },
+      {
+        "id": "recruiter",
+        "name": "HR Recruiter",
+        "workspace": "~/.openclaw/workspace-recruiter",
+        "agentDir": "~/.openclaw/agents/recruiter/agent",
+        "model": {
+          "primary": "minimax-codeplan/MiniMax-M2.5"
+        },
+        "identity": {
+          "name": "Recruiter Bot",
+          "emoji": "🤖",
+          "theme": "agent lifecycle manager"
+        },
+        "tools": {
+          "allow": [
+            "read",
+            "write",
+            "bash",
+            "exec",
+            "sessions_list",
+            "sessions_history"
+          ],
+          "deny": ["gateway", "cron", "browser"]
+        },
+        "sandbox": {
+          "mode": "off"
+        },
+        "subagents": {
+          "allowAgents": []
+        }
+      },
+      {
+        "id": "person-info",
+        "name": "Person Info Manager",
+        "workspace": "~/.openclaw/workspace-person-info",
+        "agentDir": "~/.openclaw/agents/person-info/agent",
+        "model": {
+          "primary": "minimax-codeplan/MiniMax-M2.5"
+        },
+        "identity": {
+          "name": "Info Manager",
+          "emoji": "📋",
+          "theme": "personal information specialist"
+        },
+        "tools": {
+          "allow": [
+            "read",
+            "write",
+            "bash",
+            "exec",
+            "python"
+          ],
+          "deny": ["gateway", "cron", "browser"]
+        },
+        "sandbox": {
+          "mode": "off"
+        },
+        "subagents": {
+          "allowAgents": []
+        }
+      }
+    ]
+  },
+  
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "whatsapp"
+      }
+    },
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram"
+      }
+    }
+  ],
+  
+  "tools": {
+    "agentToAgent": {
+      "enabled": true,
+      "allow": ["main", "recruiter", "person-info"]
+    },
+    "sessions": {
+      "visibility": "tree"
+    }
+  }
+}

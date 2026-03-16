@@ -1,0 +1,56 @@
+{
+  "basic": {
+    "name": "陈宇",
+    "nameEn": "Chen Yu",
+    "gender": "男",
+    "age": "28岁",
+    "birthDate": "1995-03-10",
+    "idCard": "",
+    "phone": "13987654321",
+    "email": "chenyu@qq.com",
+    "jobIntention": "后端开发工程师"
+  },
+  "address": {
+    "current": "",
+    "registered": "",
+    "postalCode": ""
+  },
+  "education": [
+    {
+      "startDate": "2016.09",
+      "endDate": "2020.06",
+      "university": "XX理工大学",
+      "major": "计算机科学与技术",
+      "degree": "本科",
+      "gpa": "3.6/4.0"
+    },
+    {
+      "startDate": "2020.09",
+      "endDate": "2023.06",
+      "university": "XX大学",
+      "major": "计算机应用技术",
+      "degree": "硕士",
+      "gpa": ""
+    }
+  ],
+  "experience": [
+    {
+      "startDate": "2023.07",
+      "endDate": "至今",
+      "company": "XX科技有限公司",
+      "position": "后端开发工程师",
+      "description": "1. 参与公司核心业务系统开发，基于Java、SpringBoot框架进行接口开发和功能迭代，负责用户模块、订单模块的代码编写和优化；\n2. 对接数据库（MySQL、Redis），优化SQL语句，提升系统响应速度，将接口响应时间从500ms优化至100ms以内；\n3. 参与系统测试和bug修复，配合测试团队完成回归测试，确保系统稳定运行，上线后系统故障率低于0.5%；\n4. 参与技术文档编写，整理接口文档、开发手册，协助新人快速熟悉业务和代码逻辑。"
+    }
+  ],
+  "skills": {
+    "certificates": [
+      "计算机软件水平考试（中级）",
+      "MySQL数据库工程师证书",
+      "英语六级证书"
+    ],
+    "professional": "熟练掌握Java、Python编程语言，熟悉SpringBoot、SpringCloud框架，精通MySQL、Redis数据库，了解微服务架构和分布式系统，具备良好的代码规范和问题排查能力。"
+  },
+  "selfEvaluation": "具备扎实的计算机专业基础和3年后端开发经验，善于思考和解决技术难题，工作严谨细致，注重代码质量和系统性能，具备良好的团队协作能力和学习能力，能快速掌握新技术并应用于实际工作。",
+  "createdAt": "2026-03-15T18:05:00Z",
+  "updatedAt": "2026-03-15T18:05:00Z"
+}
