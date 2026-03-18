@@ -1,4 +1,25 @@
 {
+  // 1. 隐藏 node_modules 文件夹（不显示在文件树）
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/dist": true
+  },
+  // 2. 禁止搜索时扫描 node_modules（最重要）
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  },
+  // 3. 关闭 VSCode 对 node_modules 的文件监听（解决一直初始化）
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true
+  },
+  // 4. 关闭 TypeScript/JS 对 node_modules 的智能提示索引
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "javascript.preferences.importModuleSpecifiers": "non-relative",
+  "typescript.preferences.importModuleSpecifiers": "non-relative",
   "editor.formatOnSave": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
@@ -14,13 +35,9 @@
   "[json]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "typescript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.reportStyleChecksAsWarnings": false,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.experimental.useTsgo": true,
-  "files.watcherExclude": {
-    "**/node_modules/**": true,
-    "**/dist/**": true
-  }
+  // "typescript.preferences.importModuleSpecifierEnding": "js",
+  // "typescript.reportStyleChecksAsWarnings": false,
+  // "typescript.updateImportsOnFileMove.enabled": "always",
+  // "typescript.tsdk": "node_modules/typescript/lib",
+  // "typescript.experimental.useTsgo": true
 }
