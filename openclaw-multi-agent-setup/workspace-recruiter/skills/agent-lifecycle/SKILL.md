@@ -1,7 +1,7 @@
 ---
 name: agent-lifecycle
 description: 管理智能体的删除、备份和生命周期维护
-metadata: {"openclaw": {"emoji": "♻️"}}
+metadata: { "openclaw": { "emoji": "♻️" } }
 ---
 
 # Agent Lifecycle Management
@@ -9,6 +9,7 @@ metadata: {"openclaw": {"emoji": "♻️"}}
 ## 功能说明
 
 这个技能提供智能体生命周期管理功能：
+
 - 安全删除智能体（包含确认和备份步骤）
 - 备份智能体工作空间和配置
 - 归档不活跃的智能体
@@ -19,6 +20,7 @@ metadata: {"openclaw": {"emoji": "♻️"}}
 ### 步骤 1: 确认删除意图
 
 在删除前，务必向用户确认：
+
 1. 确认要删除的智能体 ID
 2. 了解删除原因（记录到 MEMORY.md）
 3. 询问是否需要备份工作空间
@@ -39,6 +41,7 @@ tar -czf ~/backups/<agent-id>-workspace-<timestamp>.tar.gz \
 ```
 
 备份内容说明：
+
 - **完整备份**：包含配置、工作空间、会话记录、认证信息
 - **工作空间备份**：只包含工作空间文件（AGENTS.md, skills等）
 
@@ -50,6 +53,7 @@ openclaw agents delete <agent-id>
 ```
 
 此命令会：
+
 1. 从 `agents.list` 中移除该智能体
 2. 删除所有相关的 bindings
 3. 移动工作空间到回收站
@@ -62,6 +66,7 @@ openclaw agents delete <agent-id>
 
 ```markdown
 ### Agent: <agent-id> (DELETED)
+
 - Created: YYYY-MM-DD
 - Deleted: YYYY-MM-DD
 - Reason: <删除原因>
@@ -80,6 +85,7 @@ openclaw agents bindings
 ```
 
 提示用户重启 Gateway：
+
 ```bash
 openclaw gateway restart
 ```
@@ -89,6 +95,7 @@ openclaw gateway restart
 ### 定期备份（推荐）
 
 建议用户设置定期备份 cron 任务：
+
 ```bash
 # 每周备份一次（周日凌晨 2 点）
 # crontab -e
@@ -98,6 +105,7 @@ openclaw gateway restart
 ### 按需备份
 
 在以下情况建议备份：
+
 1. 删除智能体前
 2. 重要配置修改前
 3. 升级 OpenClaw 前
@@ -121,19 +129,23 @@ openclaw backup create --only-config --output ~/backups/config.tar.gz
 对于长期不使用但不想删除的智能体，可以"归档"：
 
 ### 步骤 1: 备份工作空间
+
 ```bash
 tar -czf ~/archives/<agent-id>-$(date +%Y%m%d).tar.gz \
   ~/.openclaw/workspace-<agent-id>
 ```
 
 ### 步骤 2: 解除所有 bindings
+
 ```bash
 openclaw agents unbind --agent <agent-id> --all
 ```
 
 ### 步骤 3: 在 Main 记忆中标记为归档
+
 ```markdown
 ### Agent: <agent-id> (ARCHIVED)
+
 - Created: YYYY-MM-DD
 - Archived: YYYY-MM-DD
 - Reason: <归档原因，如"长期未使用">
@@ -142,6 +154,7 @@ openclaw agents unbind --agent <agent-id> --all
 ```
 
 ### 步骤 4: 可选：移动工作空间
+
 ```bash
 # 将工作空间移到归档目录
 mv ~/.openclaw/workspace-<agent-id> ~/openclaw-archives/workspace-<agent-id>
@@ -150,6 +163,7 @@ mv ~/.openclaw/workspace-<agent-id> ~/openclaw-archives/workspace-<agent-id>
 ## 恢复归档的智能体
 
 ### 步骤 1: 恢复工作空间
+
 ```bash
 # 解压归档
 tar -xzf ~/archives/<agent-id>-YYYYMMDD.tar.gz -C ~/.openclaw/
@@ -159,13 +173,16 @@ mv ~/openclaw-archives/workspace-<agent-id> ~/.openclaw/workspace-<agent-id>
 ```
 
 ### 步骤 2: 添加 bindings
+
 ```bash
 openclaw agents bind --agent <agent-id> --bind <channel>
 ```
 
 ### 步骤 3: 更新 Main 记忆
+
 ```markdown
 ### Agent: <agent-id>
+
 - Created: YYYY-MM-DD
 - Archived: YYYY-MM-DD
 - Reactivated: YYYY-MM-DD
@@ -173,6 +190,7 @@ openclaw agents bind --agent <agent-id> --bind <channel>
 ```
 
 ### 步骤 4: 重启 Gateway
+
 ```bash
 openclaw gateway restart
 ```
@@ -185,18 +203,22 @@ openclaw gateway restart
 ## Managed Agents
 
 ### Active Agents
+
 （活跃的智能体列表）
 
 ### Archived Agents
+
 （归档的智能体）
 
 ### Deleted Agents（历史记录）
+
 （已删除的智能体，保留简短记录）
 ```
 
 ## 工作空间清理
 
 删除智能体后，可能的遗留文件：
+
 - 工作空间：`~/.openclaw/workspace-<agent-id>`
 - Agent 目录：`~/.openclaw/agents/<agent-id>`
 - 会话记录：`~/.openclaw/agents/<agent-id>/sessions`
@@ -207,6 +229,7 @@ OpenClaw 的 `agents delete` 命令会将工作空间、agentDir 和会话移动
 ## 批量操作
 
 ### 删除多个测试智能体
+
 ```bash
 # 列出所有测试智能体
 openclaw agents list | grep "test-"
@@ -218,6 +241,7 @@ done
 ```
 
 ### 批量备份所有智能体工作空间
+
 ```bash
 # 获取所有智能体 ID
 agent_ids=$(openclaw agents list --json | jq -r '.[].id')
@@ -247,6 +271,7 @@ done
 ## 错误处理
 
 ### 智能体不存在
+
 ```bash
 # 验证智能体存在
 if ! openclaw agents list | grep -q "<agent-id>"; then
@@ -256,6 +281,7 @@ fi
 ```
 
 ### 备份失败
+
 ```bash
 # 检查备份是否成功
 if [ ! -f ~/backups/backup.tar.gz ]; then
@@ -265,6 +291,7 @@ fi
 ```
 
 ### 删除失败
+
 ```bash
 # openclaw agents delete 返回非零状态码时处理
 if ! openclaw agents delete <agent-id>; then
@@ -284,16 +311,19 @@ fi
 ## 常见问题
 
 ### 问题1：误删智能体怎么办？
+
 - 检查系统回收站，工作空间和 agentDir 可能在那里
 - 如有备份，使用 `tar -xzf` 恢复
 - 重新运行 `openclaw agents add` 并恢复配置
 
 ### 问题2：删除后配置文件还有记录？
+
 - 手动编辑 `~/.openclaw/openclaw.json`
 - 从 `agents.list` 和 `bindings` 中移除相关条目
 - 运行 `openclaw config validate` 验证
 
 ### 问题3：删除后 Gateway 无法启动？
+
 - 检查配置文件语法：`openclaw config validate`
 - 查看日志：`openclaw gateway logs`
 - 恢复之前的备份配置
@@ -301,6 +331,7 @@ fi
 ## 快速参考
 
 ### 安全删除（带备份）
+
 ```bash
 # 1. 备份
 openclaw backup create --output ~/backups/<agent-id>-$(date +%Y%m%d).tar.gz
@@ -313,6 +344,7 @@ openclaw agents list
 ```
 
 ### 批量清理测试智能体
+
 ```bash
 for agent in $(openclaw agents list | grep "test-" | awk '{print $1}'); do
   echo "Deleting $agent..."
@@ -321,6 +353,7 @@ done
 ```
 
 ### 恢复误删的智能体
+
 ```bash
 # 1. 从备份恢复
 tar -xzf ~/backups/<agent-id>-YYYYMMDD.tar.gz -C ~/.openclaw/

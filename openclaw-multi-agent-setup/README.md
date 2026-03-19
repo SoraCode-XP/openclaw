@@ -25,7 +25,9 @@
 ## 智能体说明
 
 ### 1. Main（主调度智能体）
+
 **职责**：协调和调度其他智能体
+
 - 接收用户请求
 - 判断任务类型
 - 使用 `sessions_spawn` 调度子智能体
@@ -33,13 +35,16 @@
 - 维护 MEMORY.md 记录系统状态
 
 **工具权限**：
+
 - `sessions_spawn`/`sessions_list`/`sessions_history`/`sessions_send`/`session_status`/`subagents`/`agents_list`
 - `read` (只读)
 
 **不能执行**：写入文件、执行命令
 
 ### 2. Recruiter（HR 招聘专员）
+
 **职责**：智能体生命周期管理
+
 - 创建新智能体（配置、工作空间、技能）
 - 删除智能体（备份、清理）
 - 创建自定义技能
@@ -47,26 +52,32 @@
 - 更新 Main 的 MEMORY.md
 
 **技能**：
+
 - `agent-manager`：创建和配置智能体
 - `skill-creator`：编写 SKILL.md
 - `agent-lifecycle`：安全删除和备份
 
 **工具权限**：
+
 - `read`/`write`/`bash`/`exec`
 - 所有 sessions 工具
 
 ### 3. Person-Info（个人信息管理专员）
+
 **职责**：个人信息收集和文档自动填充
+
 - 引导式信息收集
 - 信息存储（JSON 格式）
 - Word 文档模板识别
 - 自动填充文档
 
 **技能**：
+
 - `info-collector`：收集和验证个人信息
 - `word-doc-filler`：Word 文档自动填充（需要 python-docx）
 
 **工具权限**：
+
 - `read`/`write`/`bash`/`exec`/`python`
 - 所有 sessions 工具
 
@@ -252,10 +263,13 @@ Main 呈现：
 ## 配置说明
 
 ### 模型配置
+
 所有智能体使用 `minimax-codeplan/MiniMax-M2.5` 模型（在 openclaw.json 中配置）。
 
 ### 路由绑定
+
 当前配置将 WhatsApp 和 Telegram 消息路由到 Main 智能体：
+
 ```json
 "bindings": [
   {"channel": "whatsapp", "agent": "main"},
@@ -264,7 +278,9 @@ Main 呈现：
 ```
 
 ### 子智能体白名单
+
 Main 可以调度的子智能体：
+
 ```json
 "agents": {
   "defaults": {
@@ -281,6 +297,7 @@ Main 可以调度的子智能体：
 ### 添加新智能体
 
 通过 Main 调度 Recruiter 创建：
+
 ```
 用户："创建一个新智能体"
 → Main 调度 Recruiter
@@ -288,6 +305,7 @@ Main 可以调度的子智能体：
 ```
 
 或手动执行：
+
 ```powershell
 openclaw agents add <agent-id> --workspace ~/.openclaw/workspace-<agent-id>
 ```
@@ -297,6 +315,7 @@ openclaw agents add <agent-id> --workspace ~/.openclaw/workspace-<agent-id>
 ### 为智能体添加技能
 
 通过 Recruiter：
+
 ```
 用户："给 person-info 添加一个 PDF 处理技能"
 → Main 调度 Recruiter
@@ -306,6 +325,7 @@ openclaw agents add <agent-id> --workspace ~/.openclaw/workspace-<agent-id>
 ## 故障排查
 
 ### 问题 1：智能体未出现在列表中
+
 ```powershell
 # 检查配置
 openclaw config get agents.list
@@ -318,10 +338,12 @@ openclaw gateway restart
 ```
 
 ### 问题 2：子智能体无法调度
+
 - 检查 `agents.defaults.subagents.allowAgents` 包含目标智能体 ID
 - 确认 Main 有 `sessions_spawn` 工具权限
 
 ### 问题 3：Python 脚本执行失败
+
 ```powershell
 # 检查 python-docx 是否安装
 python -c "import docx; print('python-docx 已安装')"
@@ -331,6 +353,7 @@ pip install python-docx
 ```
 
 ### 问题 4：Word 文档填充失败
+
 - 确认模板在 `~/Documents/openclaw-templates/`
 - 检查 JSON 数据是否包含所需字段
 - 验证占位符格式 `${字段名}`
@@ -338,12 +361,14 @@ pip install python-docx
 ## 下一步
 
 ### 完成的功能
+
 ✅ 三智能体配置文件
 ✅ Main 调度逻辑
 ✅ Recruiter 智能体管理
 ✅ Person-Info 信息收集和文档填充
 
 ### 待扩展功能
+
 ⏳ 添加更多预定义模板
 ⏳ 支持 Excel 表格填充
 ⏳ 支持 PDF 文档处理
@@ -358,4 +383,5 @@ pip install python-docx
 - Session Tools：https://docs.openclaw.ai/concepts/session-tool
 
 ## 许可
+
 根据 OpenClaw 项目许可使用。

@@ -1,7 +1,7 @@
 ---
 name: info-collector
 description: 引导式个人信息收集，验证格式并保存为 JSON
-metadata: {"openclaw": {"emoji": "📋"}}
+metadata: { "openclaw": { "emoji": "📋" } }
 ---
 
 # Info Collector
@@ -9,6 +9,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ## 功能说明
 
 这个技能提供结构化的个人信息收集流程：
+
 - 提供标准化的问题模板
 - 验证输入格式（手机号、邮箱、身份证等）
 - 生成 JSON 格式的数据文件
@@ -17,6 +18,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ## 信息收集模板
 
 ### 基本信息
+
 ```
 1. 姓名（中文全名）：
 2. 英文姓名（可选）：
@@ -29,6 +31,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ```
 
 ### 地址信息
+
 ```
 9. 现居地址：
 10. 户籍地址（如与现居地址相同可跳过）：
@@ -36,6 +39,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ```
 
 ### 教育背景（可以有多条：本科、硕士、博士等）
+
 ```
 对于每段教育经历：
 - 入学时间（YYYY.MM）：
@@ -47,6 +51,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ```
 
 ### 工作经历（可以有多条）
+
 ```
 对于每份工作经历：
 - 入职时间（YYYY.MM）：
@@ -57,12 +62,14 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ```
 
 ### 技能与证书
+
 ```
 12. 技能证书（多个用逗号分隔）：
 13. 技能掌握（详细描述专业技能）：
 ```
 
 ### 自我评价
+
 ```
 14. 自我评价（简要总结个人特点和优势）：
 ```
@@ -70,6 +77,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ## 使用流程
 
 ### 步骤 1: 启动收集
+
 ```
 用户说："我想填写个人信息" 或 "收集我的信息"
 
@@ -81,6 +89,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ```
 
 ### 步骤 2: 逐项收集并验证
+
 ```
 收集每个字段时：
 1. 显示问题
@@ -91,6 +100,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ```
 
 ### 步骤 3: 确认和保存
+
 ```
 收集完成后，显示完整信息：
 "请确认以下信息是否正确：
@@ -114,6 +124,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ```
 
 ### 步骤 4: 生成 JSON 文件
+
 ```
 用户确认后，生成 JSON 文件：
 文件名：persons/<姓名>-<YYYYMMDD>.json
@@ -168,11 +179,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
     }
   ],
   "skills": {
-    "certificates": [
-      "计算机软件水平考试（中级）",
-      "MySQL数据库工程师证书",
-      "英语六级证书"
-    ],
+    "certificates": ["计算机软件水平考试（中级）", "MySQL数据库工程师证书", "英语六级证书"],
     "professional": "熟练掌握Java、Python编程语言，熟悉SpringBoot、SpringCloud框架，精通MySQL、Redis数据库，了解微服务架构和分布式系统，具备良好的代码规范和问题排查能力。"
   },
   "selfEvaluation": "具备扎实的计算机专业基础和3年后端开发经验，善于思考和解决技术难题，工作严谨细致，注重代码质量和系统性能，具备良好的团队协作能力和学习能力，能快速掌握新技术并应用于实际工作。",
@@ -184,6 +191,7 @@ metadata: {"openclaw": {"emoji": "📋"}}
 ## 格式验证规则
 
 ### 手机号验证
+
 ```python
 import re
 
@@ -197,19 +205,20 @@ validate_phone("12345678901")  # False（第二位不是3-9）
 ```
 
 ### 身份证号验证
+
 ```python
 def validate_id_card(id_card):
     if len(id_card) != 18:
         return False
-    
+
     # 简化验证：检查前17位是否为数字
     if not id_card[:17].isdigit():
         return False
-    
+
     # 最后一位可以是数字或 X
     if not (id_card[17].isdigit() or id_card[17] == 'X'):
         return False
-    
+
     return True
 
 # 更严格的验证可以包括：
@@ -219,6 +228,7 @@ def validate_id_card(id_card):
 ```
 
 ### 邮箱验证
+
 ```python
 def validate_email(email):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -230,6 +240,7 @@ validate_email("invalid-email")  # False
 ```
 
 ### 日期格式验证
+
 ```python
 from datetime import datetime
 
@@ -248,6 +259,7 @@ validate_date("90-01-15")    # False
 ## 信息更新流程
 
 ### 更新单个字段
+
 ```
 用户："我的手机号换了，改成 13900139000"
 
@@ -262,6 +274,7 @@ validate_date("90-01-15")    # False
 ```
 
 ### 添加工作经历
+
 ```
 用户："添加一份新的工作经历"
 
@@ -295,6 +308,7 @@ validate_date("90-01-15")    # False
 ## 错误处理
 
 ### 格式错误
+
 ```
 用户输入：12345678901（手机号第二位不是3-9）
 
@@ -304,6 +318,7 @@ validate_date("90-01-15")    # False
 ```
 
 ### 必填字段为空
+
 ```
 用户跳过姓名字段
 
@@ -313,6 +328,7 @@ validate_date("90-01-15")    # False
 ```
 
 ### 文件已存在
+
 ```
 保存时发现文件已存在
 
@@ -328,6 +344,7 @@ validate_date("90-01-15")    # False
 ## 可选字段说明
 
 以下字段可以跳过（用户说"跳过"或"没有"）：
+
 - 英文姓名
 - 身份证号
 - 户籍地址（如与现居地址相同）
@@ -335,6 +352,7 @@ validate_date("90-01-15")    # False
 - 工作经历（如果是应届毕业生）
 
 必填字段：
+
 - 姓名
 - 性别
 - 出生日期
@@ -400,6 +418,7 @@ validate_date("90-01-15")    # False
 ## 快速参考
 
 ### 保存 JSON 文件
+
 ```python
 import json
 from datetime import datetime
@@ -420,6 +439,7 @@ with open(filename, 'w', encoding='utf-8') as f:
 ```
 
 ### 读取 JSON 文件
+
 ```python
 import json
 
@@ -430,6 +450,7 @@ print(data['basic']['name'])  # 张三
 ```
 
 ### 更新字段
+
 ```python
 # 更新手机号
 data['basic']['phone'] = '13900139000'

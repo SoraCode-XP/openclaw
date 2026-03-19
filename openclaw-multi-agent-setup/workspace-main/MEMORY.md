@@ -9,6 +9,7 @@
 ## Managed Agents
 
 ### Agent: recruiter
+
 - Created: 2026-03-15
 - Purpose: HR 招聘专员，负责智能体生命周期管理
 - Model: minimax-codeplan/MiniMax-M2.5
@@ -21,6 +22,7 @@
   - agent-lifecycle: 智能体删除和备份
 
 ### Agent: person-info
+
 - Created: 2026-03-15
 - Purpose: 个人信息管理和 Word 文档填充
 - Model: minimax-codeplan/MiniMax-M2.5
@@ -34,6 +36,7 @@
 ## Recent Operations
 
 ### 2026-03-15: System Initialization
+
 - Created multi-agent system with main orchestrator
 - Configured recruiter agent for agent management
 - Configured person-info agent for document processing

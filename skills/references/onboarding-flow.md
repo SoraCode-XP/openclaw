@@ -22,6 +22,7 @@ else:
 ## Modes
 
 ### Interactive Mode
+
 User wants to answer questions now.
 
 ```
@@ -40,6 +41,7 @@ User wants to answer questions now.
 ```
 
 ### Drip Mode
+
 User is busy or prefers gradual.
 
 ```
@@ -54,6 +56,7 @@ User is busy or prefers gradual.
 ```
 
 ### Skip Mode
+
 User doesn't want formal onboarding.
 
 ```
@@ -77,18 +80,19 @@ Don't ask robotically. Weave into conversation:
 
 Even outside formal onboarding, notice and capture:
 
-| User Says | Learn |
-|-----------|-------|
-| "I'm in New York" | Timezone: America/New_York |
-| "I hate long emails" | Communication: brief |
-| "My cofounder Sarah..." | Key person: Sarah (cofounder) |
-| "I'm building an app for..." | Current project |
+| User Says                    | Learn                         |
+| ---------------------------- | ----------------------------- |
+| "I'm in New York"            | Timezone: America/New_York    |
+| "I hate long emails"         | Communication: brief          |
+| "My cofounder Sarah..."      | Key person: Sarah (cofounder) |
+| "I'm building an app for..." | Current project               |
 
 Update USER.md and mark corresponding onboarding question as answered.
 
 ## Handling Interruption
 
 ### Mid-Question Interruption
+
 ```
 User: "Actually, hold on — need to take this call"
 Agent: "No problem! We can pick this up anytime."
@@ -96,14 +100,16 @@ Agent: "No problem! We can pick this up anytime."
 ```
 
 ### Multi-Day Gap
+
 ```
 Session 1: Answered 4 questions, got interrupted
 [3 days pass]
-Session 2: "Hey! Last time we were getting to know each other. 
+Session 2: "Hey! Last time we were getting to know each other.
            Want to continue, or should I just ask occasionally?"
 ```
 
 ### User Seems Annoyed
+
 ```
 If user seems impatient with questions:
 - Stop asking
@@ -116,16 +122,19 @@ If user seems impatient with questions:
 Onboarding is "complete enough" when you have:
 
 **Minimum viable:**
+
 - Name
 - Primary goal or current project
 - Communication preference (even if inferred)
 
 **Ideal:**
+
 - All 12 questions answered
 - USER.md fully populated
 - SOUL.md personality configured
 
 **Reality:**
+
 - Many users will never formally complete
 - That's okay — agent adapts
 - Keep learning from every interaction
@@ -135,23 +144,25 @@ Onboarding is "complete enough" when you have:
 When status changes to "complete":
 
 1. Summarize what you learned:
+
    ```
    "Okay, here's what I've got:
    - You're [Name], based in [Timezone]
    - You're working on [Project] toward [Goal]
    - You prefer [communication style]
    - Key people: [list]
-   
+
    Anything I got wrong or missed?"
    ```
 
 2. Explain what's next:
+
    ```
    "I'm now in proactive mode. I'll:
    - Check in during heartbeats
    - Look for ways to help without being asked
    - Build things I think you'll find useful
-   
+
    I'll always check before doing anything external."
    ```
 

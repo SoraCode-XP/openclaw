@@ -3,7 +3,9 @@
 ## 🎉 新功能：AI 智能文档处理
 
 ### 核心创新
+
 不再需要手动创建带占位符的模板！只需：
+
 1. **上传任意 Word 文档**（如空白表单、申请表等）
 2. **AI 自动分析**字段和结构
 3. **智能生成模板**带占位符
@@ -57,6 +59,7 @@ pnpm openclaw gateway restart
 ```
 
 **期望流程**：
+
 1. Person-Info 提取文档文本
 2. 调用 Minimax AI 识别字段
 3. 生成模板：`templates/测试简历-模板.docx`
@@ -194,16 +197,19 @@ output/标准简历-张三-filled.docx"
 Person-Info 使用系统配置的 Minimax API 进行字段识别：
 
 **检查配置**：
+
 ```powershell
 Get-Content "$env:USERPROFILE\.openclaw\openclaw.json" | ConvertFrom-Json | Select-Object -ExpandProperty agents | Where-Object {$_.id -eq "person-info"} | Select-Object -ExpandProperty model
 ```
 
 **应该显示**：
+
 ```
 primary: minimax-codeplan/MiniMax-M2.5
 ```
 
 如果没有配置 Minimax API，请更新 `openclaw.json`：
+
 ```json
 {
   "agents": {
@@ -233,6 +239,7 @@ python "$env:USERPROFILE\.openclaw\workspace-person-info\skills\doc-template-gen
 ```
 
 **预期输出**：
+
 ```
 ✓ Text extracted successfully
   Input:  C:\Users\Sora\.openclaw\workspace-person-info\uploads\测试简历.docx
@@ -244,19 +251,36 @@ python "$env:USERPROFILE\.openclaw\workspace-person-info\skills\doc-template-gen
 ### 测试模板生成
 
 首先手动创建 `temp/fields.json`：
+
 ```json
 {
   "fields": [
-    {"location": "第3段", "fieldName": "姓名", "standardPath": "basic.name", "required": true},
-    {"location": "第4段", "fieldName": "性别", "standardPath": "basic.gender", "required": true},
-    {"location": "第5段", "fieldName": "出生日期", "standardPath": "basic.birthDate", "required": true},
-    {"location": "第6段", "fieldName": "联系电话", "standardPath": "basic.phone", "required": true},
-    {"location": "第7段", "fieldName": "电子邮箱", "standardPath": "basic.email", "required": true}
+    { "location": "第3段", "fieldName": "姓名", "standardPath": "basic.name", "required": true },
+    { "location": "第4段", "fieldName": "性别", "standardPath": "basic.gender", "required": true },
+    {
+      "location": "第5段",
+      "fieldName": "出生日期",
+      "standardPath": "basic.birthDate",
+      "required": true
+    },
+    {
+      "location": "第6段",
+      "fieldName": "联系电话",
+      "standardPath": "basic.phone",
+      "required": true
+    },
+    {
+      "location": "第7段",
+      "fieldName": "电子邮箱",
+      "standardPath": "basic.email",
+      "required": true
+    }
   ]
 }
 ```
 
 然后运行：
+
 ```powershell
 python "$env:USERPROFILE\.openclaw\workspace-person-info\skills\doc-template-generator\scripts\template_generator.py" `
   --action generate `
@@ -266,6 +290,7 @@ python "$env:USERPROFILE\.openclaw\workspace-person-info\skills\doc-template-gen
 ```
 
 **预期输出**：
+
 ```
 Field mapping loaded: 5 fields
   姓名 → {{basic.name}}
@@ -284,6 +309,7 @@ Field mapping loaded: 5 fields
 ```
 
 打开生成的模板文档，应该看到：
+
 ```
 姓名：{{basic.name}}
 性别：{{basic.gender}}
@@ -297,26 +323,33 @@ Field mapping loaded: 5 fields
 ## ❓ 常见问题
 
 ### Q1: Python 依赖安装失败？
+
 ```powershell
 pip install python-docx --user
 ```
 
 ### Q2: 无法找到 python 命令？
+
 确保 Python 在 PATH 中：
+
 ```powershell
 python --version
 ```
+
 如果失败，从 https://www.python.org/downloads/ 安装 Python 3.7+
 
 ### Q3: Minimax API 调用失败？
+
 - 检查 API Key 配置
 - 确认账户余额充足
 - 验证网络连接
 
 ### Q4: 字段识别不准确？
+
 手动编辑 `temp/fields.json`，调整字段映射后重新生成模板。
 
 ### Q5: 填充后格式错乱？
+
 python-docx 只替换文本，不修改格式。确保原文档使用简单的文本样式。
 
 ---
@@ -344,6 +377,7 @@ python-docx 只替换文本，不修改格式。确保原文档使用简单的�
 ## 💬 反馈与支持
 
 遇到问题？向 Person-Info 智能体反馈：
+
 ```
 "我在使用智能文档处理时遇到了问题..."
 ```

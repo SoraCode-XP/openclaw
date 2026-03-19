@@ -414,6 +414,7 @@ metadata: {"openclaw": {"emoji": "📚", "homepage": "https://docs.openclaw.ai/t
 ## 功能说明
 
 这个技能提供创建 OpenClaw Skills 的完整指导，包括：
+
 - SKILL.md 文件结构和语法
 - metadata.openclaw 配置（依赖、安装器）
 - 脚本文件组织
@@ -421,46 +422,63 @@ metadata: {"openclaw": {"emoji": "📚", "homepage": "https://docs.openclaw.ai/t
 
 ## SKILL.md 标准结构
 
-```markdown
+````markdown
 ---
 name: skill-name
 description: 技能的简短描述（一句话说明功能，用于 LLM 识别）
-metadata: {"openclaw": {"requires": {"bins": ["required-binary"], "env": ["ENV_VAR"]}, "emoji": "🔧", "install": [...]}}
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "bins": ["required-binary"], "env": ["ENV_VAR"] },
+        "emoji": "🔧",
+        "install": [...],
+      },
+  }
 ---
 
 # Skill Title
 
 ## 功能说明
+
 详细描述技能的用途和使用场景。
 
 ## 使用方法
+
 ### 步骤 1: 准备
+
 说明前置条件...
 
 ### 步骤 2: 执行
+
 使用 bash 工具调用：
 \```bash
 command {baseDir}/scripts/script.sh --arg value
 \```
 
 ## 参数说明
+
 - `--arg`: 参数说明
 
 ## 示例
+
 具体使用示例...
 
 ## 注意事项
+
 错误处理和边界情况...
-```
+````
 
 ## YAML Frontmatter 字段
 
 ### name（必需）
+
 - 技能的唯一标识符
 - 使用 kebab-case：`word-doc-filler`, `data-analyzer`
 - 与目录名匹配
 
 ### description（必需）
+
 - 简短的功能描述（1-2句话）
 - 用于 LLM 决定何时使用这个技能
 - 清晰说明输入和输出
@@ -468,6 +486,7 @@ command {baseDir}/scripts/script.sh --arg value
 ### metadata.openclaw（可选但推荐）
 
 #### requires（依赖要求）
+
 ```json
 "requires": {
   "bins": ["python3", "node"],      // 必需的命令行工具
@@ -478,6 +497,7 @@ command {baseDir}/scripts/script.sh --arg value
 ```
 
 #### install（安装器配置）
+
 ```json
 "install": [
   {
@@ -499,6 +519,7 @@ command {baseDir}/scripts/script.sh --arg value
 ```
 
 #### 其他字段
+
 ```json
 "emoji": "🔧",     // 技能图标（macOS UI 使用）
 "homepage": "https://example.com",  // 技能主页
@@ -510,7 +531,7 @@ command {baseDir}/scripts/script.sh --arg value
 
 在 SKILL.md 中引用技能目录下的文件时，使用 `{baseDir}` 占位符：
 
-```markdown
+````markdown
 执行脚本：
 \```bash
 python {baseDir}/scripts/processor.py --input file.txt
@@ -520,7 +541,7 @@ python {baseDir}/scripts/processor.py --input file.txt
 \```bash
 cat {baseDir}/references/api-docs.md
 \```
-```
+````
 
 OpenClaw 会自动将 `{baseDir}` 替换为技能目录的绝对路径。
 
@@ -545,38 +566,40 @@ OpenClaw 会自动将 `{baseDir}` 替换为技能目录的绝对路径。
 ### scripts/ 目录
 
 - **Python 脚本**：
+
   ```python
   #!/usr/bin/env python3
   # scripts/processor.py
   import argparse
-  
+
   def main():
       parser = argparse.ArgumentParser()
       parser.add_argument('--input', required=True)
       parser.add_argument('--output', required=True)
       args = parser.parse_args()
       # 处理逻辑...
-  
+
   if __name__ == '__main__':
       main()
   ```
-  
+
   - 添加 shebang：`#!/usr/bin/env python3`
   - 使用 argparse 处理参数
   - 创建 `requirements.txt` 列出依赖
 
 - **Bash 脚本**：
+
   ```bash
   #!/usr/bin/env bash
   # scripts/helper.sh
   set -euo pipefail
-  
+
   input_file="$1"
   output_file="$2"
-  
+
   # 处理逻辑...
   ```
-  
+
   - 添加 shebang：`#!/usr/bin/env bash`
   - 使用 `set -euo pipefail` 增强错误处理
   - 确保可执行权限：`chmod +x scripts/helper.sh`
@@ -584,6 +607,7 @@ OpenClaw 会自动将 `{baseDir}` 替换为技能目录的绝对路径。
 ### references/ 目录
 
 存放 API 文档、使用示例、参考资料：
+
 - Markdown 格式文档
 - JSON 格式的示例数据
 - 第三方 API 文档摘要
@@ -591,6 +615,7 @@ OpenClaw 会自动将 `{baseDir}` 替换为技能目录的绝对路径。
 ### assets/ 目录
 
 存放模板文件、配置文件、静态资源：
+
 - Word/Excel 模板
 - 配置文件模板
 - 图标、字体等资源
@@ -598,6 +623,7 @@ OpenClaw 会自动将 `{baseDir}` 替换为技能目录的绝对路径。
 ## Python 依赖管理
 
 ### requirements.txt
+
 ```txt
 python-docx==0.8.11
 requests>=2.28.0
@@ -606,6 +632,7 @@ pydantic>=2.0.0
 ```
 
 ### 在 SKILL.md 中说明安装
+
 ````markdown
 ## 首次使用前
 
@@ -617,7 +644,7 @@ pip install -r {baseDir}/scripts/requirements.txt
 或在技能中自动检查和安装：
 \```bash
 if ! python -c "import docx" 2>/dev/null; then
-  pip install -r {baseDir}/scripts/requirements.txt
+pip install -r {baseDir}/scripts/requirements.txt
 fi
 \```
 ````
@@ -625,7 +652,9 @@ fi
 ## 技能创建完整流程
 
 ### 步骤 1: 确定技能需求
+
 询问用户：
+
 1. 技能名称（kebab-case）
 2. 功能描述
 3. 需要的依赖（CLI 工具、Python 库、环境变量）
@@ -633,12 +662,15 @@ fi
 5. 目标智能体的工作空间路径
 
 ### 步骤 2: 创建技能目录
+
 ```bash
 mkdir -p <workspace>/skills/<skill-name>/{scripts,references,assets}
 ```
 
 ### 步骤 3: 生成 SKILL.md
+
 根据用户需求，生成包含以下内容的 SKILL.md：
+
 1. YAML frontmatter（name, description, metadata）
 2. 功能说明和使用场景
 3. 详细的使用步骤
@@ -646,18 +678,23 @@ mkdir -p <workspace>/skills/<skill-name>/{scripts,references,assets}
 5. 错误处理指导
 
 ### 步骤 4: 创建脚本文件（如需要）
+
 - Python 脚本：添加 shebang、argparse、错误处理
 - Bash 脚本：添加 shebang、参数验证、错误处理
 - 创建 requirements.txt（如有 Python 依赖）
 
 ### 步骤 5: 添加参考文档（可选）
+
 在 `references/` 目录下添加：
+
 - API 文档摘要
 - 使用示例
 - 常见问题解答
 
 ### 步骤 6: 测试技能加载
+
 提示用户：
+
 ```bash
 # 重启 Gateway 重新加载技能
 openclaw gateway restart
@@ -669,11 +706,13 @@ read <workspace>/skills/<skill-name>/SKILL.md
 ## 技能编写最佳实践
 
 ### 1. 清晰的功能边界
+
 - 一个技能只做一件事（单一职责原则）
 - 避免功能重叠
 - 明确输入输出
 
 ### 2. 完善的错误处理
+
 ```python
 try:
     result = process_file(input_path)
@@ -686,18 +725,23 @@ except Exception as e:
 ```
 
 ### 3. 详细的使用说明
+
 - 提供完整的示例命令
 - 说明每个参数的作用
 - 列出常见错误和解决方法
 
 ### 4. 依赖声明完整
+
 在 metadata.openclaw.requires 中声明所有依赖：
+
 - 命令行工具（bins）
 - 环境变量（env）
 - 配置要求（config）
 
 ### 5. 脚本参数化
+
 避免硬编码路径和配置：
+
 ```bash
 # 不好：硬编码路径
 python /Users/user/scripts/process.py
@@ -709,11 +753,19 @@ python {baseDir}/scripts/process.py --input "$input_file" --output "$output_file
 ## 常见技能模式
 
 ### 模式1：数据处理技能
-```markdown
+
+````markdown
 ---
 name: data-processor
 description: 读取 CSV/JSON 数据并生成分析报告
-metadata: {"openclaw": {"requires": {"bins": ["python3"]}, "install": [{"id": "pip", "kind": "node", "packages": ["pandas", "matplotlib"]}]}}
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "bins": ["python3"] },
+        "install": [{ "id": "pip", "kind": "node", "packages": ["pandas", "matplotlib"] }],
+      },
+  }
 ---
 
 # Data Processor
@@ -722,14 +774,22 @@ metadata: {"openclaw": {"requires": {"bins": ["python3"]}, "install": [{"id": "p
 \```bash
 python {baseDir}/scripts/analyze.py --input data.csv --output report.html
 \```
-```
+````
 
 ### 模式2：API 集成技能
-```markdown
+
+````markdown
 ---
 name: api-client
 description: 调用外部 API 并格式化结果
-metadata: {"openclaw": {"requires": {"env": ["API_KEY"]}, "install": [{"id": "pip", "kind": "node", "packages": ["requests"]}]}}
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "env": ["API_KEY"] },
+        "install": [{ "id": "pip", "kind": "node", "packages": ["requests"] }],
+      },
+  }
 ---
 
 # API Client
@@ -738,14 +798,22 @@ metadata: {"openclaw": {"requires": {"env": ["API_KEY"]}, "install": [{"id": "pi
 \```bash
 python {baseDir}/scripts/api_call.py --endpoint "/users" --method GET
 \```
-```
+````
 
 ### 模式3：文档处理技能
-```markdown
+
+````markdown
 ---
 name: doc-filler
 description: 根据 JSON 数据填充 Word 文档模板
-metadata: {"openclaw": {"requires": {"bins": ["python3"]}, "install": [{"id": "pip", "kind": "node", "packages": ["python-docx"]}]}}
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "bins": ["python3"] },
+        "install": [{ "id": "pip", "kind": "node", "packages": ["python-docx"] }],
+      },
+  }
 ---
 
 # Document Filler
@@ -753,11 +821,11 @@ metadata: {"openclaw": {"requires": {"bins": ["python3"]}, "install": [{"id": "p
 使用方式：
 \```bash
 python {baseDir}/scripts/fill_doc.py \
-  --template template.docx \
-  --data data.json \
-  --output filled.docx
+ --template template.docx \
+ --data data.json \
+ --output filled.docx
 \```
-```
+````
 
 ## 技能验证清单
 
@@ -777,17 +845,20 @@ python {baseDir}/scripts/fill_doc.py \
 ## 快速参考
 
 ### 创建空技能结构
+
 ```bash
 mkdir -p ~/.openclaw/workspace-<agent>/skills/<skill-name>/{scripts,references,assets}
 ```
 
 ### 检查技能是否加载
+
 ```bash
 # 智能体可以读取技能文件验证
 read ~/.openclaw/workspace-<agent>/skills/<skill-name>/SKILL.md
 ```
 
 ### 常用 metadata 模板
+
 ```json
 {
   "openclaw": {

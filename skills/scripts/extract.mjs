@@ -8,7 +8,7 @@ function usage() {
 const args = process.argv.slice(2);
 if (args.length === 0 || args[0] === "-h" || args[0] === "--help") usage();
 
-const urls = args.filter(a => !a.startsWith("-"));
+const urls = args.filter((a) => !a.startsWith("-"));
 
 if (urls.length === 0) {
   console.error("No URLs provided");
@@ -45,7 +45,7 @@ const failed = data.failed_results ?? [];
 for (const r of results) {
   const url = String(r?.url ?? "").trim();
   const content = String(r?.raw_content ?? "").trim();
-  
+
   console.log(`# ${url}\n`);
   console.log(content || "(no content extracted)");
   console.log("\n---\n");

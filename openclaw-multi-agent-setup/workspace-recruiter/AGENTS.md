@@ -20,6 +20,7 @@
    - 明确需要的工具权限（read/write/exec/bash 等）
 
 2. **执行创建命令**
+
    ```bash
    openclaw agents add <agent-id> --workspace ~/.openclaw/workspace-<agent-id>
    ```
@@ -30,6 +31,7 @@
    - 使用 write 工具保存配置
 
 4. **设置路由绑定**（可选）
+
    ```bash
    openclaw agents bind --agent <agent-id> --bind <channel>:<account>
    ```
@@ -56,6 +58,7 @@
    - 确定所需依赖（Python 库、CLI 工具等）
 
 2. **创建技能目录结构**
+
    ```
    <workspace>/skills/<skill-name>/
    ├── SKILL.md          # 技能说明和指导（必需）
@@ -84,9 +87,11 @@
      ```
 
 2. **执行删除命令**
+
    ```bash
    openclaw agents delete <agent-id>
    ```
+
    - 这会同时删除配置、工作空间、会话和认证文件
 
 3. **更新 Main 智能体记忆**
@@ -111,25 +116,25 @@
         name: "<显示名称>",
         workspace: "~/.openclaw/workspace-<agent-id>",
         agentDir: "~/.openclaw/agents/<agent-id>/agent",
-        model: "minimax-codeplan/MiniMax-M2.5",  // 或 { primary: "...", fallbacks: [...] }
+        model: "minimax-codeplan/MiniMax-M2.5", // 或 { primary: "...", fallbacks: [...] }
         identity: {
           name: "<智能体名称>",
           emoji: "🤖",
-          theme: "<主题描述>"
+          theme: "<主题描述>",
         },
         tools: {
           allow: ["read", "write", "bash", "exec"],
-          deny: ["gateway", "cron"]
+          deny: ["gateway", "cron"],
         },
         sandbox: {
-          mode: "off"  // 或 "all", "non-main", "require"
+          mode: "off", // 或 "all", "non-main", "require"
         },
         subagents: {
-          allowAgents: []  // 如果这个智能体不需要调度子智能体，留空
-        }
-      }
-    ]
-  }
+          allowAgents: [], // 如果这个智能体不需要调度子智能体，留空
+        },
+      },
+    ],
+  },
 }
 ```
 
@@ -139,7 +144,23 @@
 ---
 name: skill-name
 description: 技能的简短描述（一句话说明功能）
-metadata: {"openclaw": {"requires": {"bins": ["python3"], "env": []}, "install": [{"id": "pip", "kind": "node", "bins": ["python3"], "label": "安装 Python 依赖", "packages": ["python-docx"]}]}}
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "bins": ["python3"], "env": [] },
+        "install":
+          [
+            {
+              "id": "pip",
+              "kind": "node",
+              "bins": ["python3"],
+              "label": "安装 Python 依赖",
+              "packages": ["python-docx"],
+            },
+          ],
+      },
+  }
 ---
 
 # Skill Name
@@ -153,6 +174,7 @@ metadata: {"openclaw": {"requires": {"bins": ["python3"], "env": []}, "install":
 ### 步骤 1: 准备环境
 
 如果需要依赖，说明如何安装：
+
 ```bash
 pip install -r {baseDir}/requirements.txt
 ```
@@ -160,6 +182,7 @@ pip install -r {baseDir}/requirements.txt
 ### 步骤 2: 调用示例
 
 使用 bash 工具执行脚本：
+
 ```bash
 python {baseDir}/scripts/script_name.py --arg1 value1 --arg2 value2
 ```
@@ -184,6 +207,7 @@ python {baseDir}/scripts/example.py --template /path/to/template --data /path/to
 ## 关键命令速查
 
 ### 智能体管理
+
 ```bash
 # 列出所有智能体
 openclaw agents list --bindings
@@ -205,6 +229,7 @@ openclaw agents set-identity --agent <agent-id> --name "Name" --emoji "🎯"
 ```
 
 ### 配置管理
+
 ```bash
 # 读取配置
 openclaw config get agents.list
@@ -217,6 +242,7 @@ openclaw gateway restart
 ```
 
 ### 备份与恢复
+
 ```bash
 # 创建备份
 openclaw backup create --output ~/backups/backup-$(date +%Y%m%d).tar.gz
@@ -228,15 +254,18 @@ openclaw backup create --no-include-workspace --output ~/backups/config-backup.t
 ## 智能体配置字段详解
 
 ### 必需字段
+
 - `id`: 智能体唯一标识（kebab-case）
 - `workspace`: 工作空间路径（建议 `~/.openclaw/workspace-<id>`）
 
 ### 推荐字段
+
 - `name`: 显示名称
 - `agentDir`: 状态目录（默认 `~/.openclaw/agents/<id>/agent`）
 - `model`: 使用的模型（字符串或包含 primary/fallbacks 的对象）
 
 ### 可选字段
+
 - `identity`: 身份配置（name, emoji, theme, avatar）
 - `tools`: 工具权限配置（allow, deny, profile, byProvider）
 - `sandbox`: 沙箱配置（mode, scope, workspaceRoot）
@@ -246,6 +275,7 @@ openclaw backup create --no-include-workspace --output ~/backups/config-backup.t
 - `params`: 流参数覆盖（cacheRetention, temperature 等）
 
 ### tools 配置示例
+
 ```json5
 tools: {
   allow: ["read", "write", "bash", "exec", "sessions_list"],
@@ -275,19 +305,23 @@ tools: {
 ## 常见问题处理
 
 ### 问题1：配置文件格式错误
+
 - 使用 `openclaw config validate` 检查
 - 确保 JSON5 语法正确（允许尾随逗号和注释）
 
 ### 问题2：智能体无法调度子智能体
+
 - 检查 main 的 `agents.defaults.subagents.allowAgents` 是否包含目标智能体 ID
 - 确保 main 有 `sessions_spawn` 工具权限
 
 ### 问题3：技能未加载
+
 - 检查 SKILL.md frontmatter 格式
 - 验证 metadata.openclaw.requires 中的依赖是否满足
 - 重启 Gateway 刷新技能列表
 
 ### 问题4：工作空间冲突
+
 - 确保每个智能体使用独立的工作空间路径
 - 不要复用相同的 agentDir
 
@@ -302,12 +336,15 @@ tools: {
 ## 记忆管理
 
 在完成智能体创建或删除后，必须更新 main 智能体的记忆文件：
+
 - 位置：`~/.openclaw/workspace/MEMORY.md`
 - 格式参考：
+
 ```markdown
 ## Managed Agents
 
 ### Agent: data-analyst
+
 - Created: 2026-03-15
 - Purpose: 数据分析和可视化
 - Model: minimax-codeplan/MiniMax-M2.5
@@ -315,6 +352,7 @@ tools: {
 - Status: Active
 
 ### Agent: test-bot (DELETED)
+
 - Created: 2026-03-10
 - Deleted: 2026-03-14
 - Reason: 测试完成，不再需要

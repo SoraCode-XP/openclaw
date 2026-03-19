@@ -18,6 +18,7 @@ metadata:
 ## Overview
 
 This skill provides intelligent document processing capabilities:
+
 1. **Text Extraction**: Extract all text content from Word (.docx) documents
 2. **Field Identification**: Use Minimax AI to identify fields that need to be filled
 3. **Field Mapping**: Map identified fields to standard personal information schema
@@ -28,6 +29,7 @@ This skill provides intelligent document processing capabilities:
 ### Step 1: Extract Document Text
 
 **Command**:
+
 ```bash
 python {baseDir}/scripts/template_generator.py \
   --action extract \
@@ -36,11 +38,13 @@ python {baseDir}/scripts/template_generator.py \
 ```
 
 **Parameters**:
+
 - `--action extract`: Specify extraction mode
 - `--input`: Path to input .docx file
 - `--output`: Path to save extracted text
 
 **Example**:
+
 ```bash
 python {baseDir}/scripts/template_generator.py \
   --action extract \
@@ -56,11 +60,13 @@ A text file containing all paragraph text from the document.
 ### Step 2: Identify Fields with LLM
 
 **Process**:
+
 1. Read the extracted text file
 2. Send to Minimax API with a structured prompt
 3. Parse JSON response containing field information
 
 **Prompt Template**:
+
 ```
 你是一个文档字段识别专家。请分析以下 Word 文档内容，识别出所有需要填写个人信息的字段。
 
@@ -94,6 +100,7 @@ A text file containing all paragraph text from the document.
 ```
 
 **Expected Response**:
+
 ```json
 {
   "fields": [
@@ -133,6 +140,7 @@ Save the parsed JSON response to a file (e.g., `temp/fields.json`) for the next 
 ### Step 3: Generate Template Document
 
 **Command**:
+
 ```bash
 python {baseDir}/scripts/template_generator.py \
   --action generate \
@@ -142,12 +150,14 @@ python {baseDir}/scripts/template_generator.py \
 ```
 
 **Parameters**:
+
 - `--action generate`: Specify template generation mode
 - `--input`: Path to original input .docx file
 - `--fields`: Path to fields.json (from Step 2)
 - `--output`: Path to save generated template
 
 **Example**:
+
 ```bash
 python {baseDir}/scripts/template_generator.py \
   --action generate \
@@ -157,6 +167,7 @@ python {baseDir}/scripts/template_generator.py \
 ```
 
 **Processing Logic**:
+
 1. Load original .docx document
 2. Read fields.json to get field locations and names
 3. Search for field names in document paragraphs
@@ -166,6 +177,7 @@ python {baseDir}/scripts/template_generator.py \
 **Example Transformation**:
 
 **Original Document**:
+
 ```
 姓名：
 性别：
@@ -173,6 +185,7 @@ python {baseDir}/scripts/template_generator.py \
 ```
 
 **Generated Template**:
+
 ```
 姓名：{{basic.name}}
 性别：{{basic.gender}}
@@ -190,72 +203,72 @@ The skill maps document fields to a standardized JSON schema:
 ```json
 {
   "basic": {
-    "name": "string",        // 姓名
-    "nameEn": "string",      // 英文名
-    "gender": "string",      // 性别
-    "age": "string",         // 年龄（如"28岁"）
-    "birthDate": "string",   // 出生日期 (YYYY-MM-DD)
-    "idCard": "string",      // 身份证号
-    "phone": "string",       // 联系电话
-    "email": "string",       // 电子邮箱
+    "name": "string", // 姓名
+    "nameEn": "string", // 英文名
+    "gender": "string", // 性别
+    "age": "string", // 年龄（如"28岁"）
+    "birthDate": "string", // 出生日期 (YYYY-MM-DD)
+    "idCard": "string", // 身份证号
+    "phone": "string", // 联系电话
+    "email": "string", // 电子邮箱
     "jobIntention": "string" // 求职意向
   },
   "address": {
-    "current": "string",     // 现居地址
-    "registered": "string",  // 户籍地址
-    "postalCode": "string"   // 邮政编码
+    "current": "string", // 现居地址
+    "registered": "string", // 户籍地址
+    "postalCode": "string" // 邮政编码
   },
   "education": [
     {
-      "startDate": "string",      // 入学时间 (YYYY.MM)
-      "endDate": "string",        // 毕业时间 (YYYY.MM)
-      "university": "string",     // 学校名称
-      "major": "string",          // 专业
-      "degree": "string",         // 学历层次
-      "gpa": "string"             // GPA（可选）
+      "startDate": "string", // 入学时间 (YYYY.MM)
+      "endDate": "string", // 毕业时间 (YYYY.MM)
+      "university": "string", // 学校名称
+      "major": "string", // 专业
+      "degree": "string", // 学历层次
+      "gpa": "string" // GPA（可选）
     }
   ],
   "experience": [
     {
-      "startDate": "string",   // 入职时间 (YYYY.MM)
-      "endDate": "string",     // 离职时间 (YYYY.MM 或 "至今")
-      "company": "string",     // 公司名称
-      "position": "string",    // 职位
-      "description": "string"  // 工作描述
+      "startDate": "string", // 入职时间 (YYYY.MM)
+      "endDate": "string", // 离职时间 (YYYY.MM 或 "至今")
+      "company": "string", // 公司名称
+      "position": "string", // 职位
+      "description": "string" // 工作描述
     }
   ],
   "skills": {
-    "certificates": ["string"],  // 技能证书列表
-    "professional": "string"     // 专业技能描述
+    "certificates": ["string"], // 技能证书列表
+    "professional": "string" // 专业技能描述
   },
-  "selfEvaluation": "string"     // 自我评价
+  "selfEvaluation": "string" // 自我评价
 }
 ```
 
 ### Common Field Mappings
 
-| Document Field Name | Standard Path | Description |
-|---------------------|---------------|-------------|
-| 姓名 / 姓氏名字 / 申请人姓名 | `basic.name` | 中文全名 |
-| 性别 / 男女 | `basic.gender` | 性别（男/女/其他）|
-| 年龄 | `basic.age` | 年龄（如"28岁"）|
-| 出生日期 / 生日 | `basic.birthDate` | 出生日期 |
-| 身份证号 / 身份证号码 | `basic.idCard` | 18位身份证号 |
-| 联系电话 / 手机号 / 电话 | `basic.phone` | 11位手机号 |
-| 电子邮箱 / 邮箱 / Email | `basic.email` | 电子邮箱地址 |
-| 求职意向 / 应聘岗位 | `basic.jobIntention` | 求职意向 |
-| 现居地址 / 联系地址 | `address.current` | 现居住地址 |
-| 户籍地址 / 户口所在地 | `address.registered` | 户籍地址 |
-| 学历 / 最高学历 | `education[0].degree` | 学历层次 |
-| 毕业院校 / 学校 | `education[0].university` | 毕业学校名称 |
-| 专业 / 所学专业 | `education[0].major` | 专业名称 |
-| 毕业时间 / 毕业日期 | `education[0].endDate` | 毕业年月 |
-| GPA / 绩点 | `education[0].gpa` | GPA成绩 |
-| 公司 / 工作单位 | `experience[0].company` | 公司名称 |
-| 职位 / 岗位 | `experience[0].position` | 职位名称 |
-| 技能证书 / 资格证书 | `skills.certificates` | 证书列表 |
-| 专业技能 / 技能掌握 | `skills.professional` | 技能描述 |
-| 自我评价 / 个人评价 | `selfEvaluation` | 自我评价 |
+| Document Field Name          | Standard Path             | Description        |
+| ---------------------------- | ------------------------- | ------------------ |
+| 姓名 / 姓氏名字 / 申请人姓名 | `basic.name`              | 中文全名           |
+| 性别 / 男女                  | `basic.gender`            | 性别（男/女/其他） |
+| 年龄                         | `basic.age`               | 年龄（如"28岁"）   |
+| 出生日期 / 生日              | `basic.birthDate`         | 出生日期           |
+| 身份证号 / 身份证号码        | `basic.idCard`            | 18位身份证号       |
+| 联系电话 / 手机号 / 电话     | `basic.phone`             | 11位手机号         |
+| 电子邮箱 / 邮箱 / Email      | `basic.email`             | 电子邮箱地址       |
+| 求职意向 / 应聘岗位          | `basic.jobIntention`      | 求职意向           |
+| 现居地址 / 联系地址          | `address.current`         | 现居住地址         |
+| 户籍地址 / 户口所在地        | `address.registered`      | 户籍地址           |
+| 学历 / 最高学历              | `education[0].degree`     | 学历层次           |
+| 毕业院校 / 学校              | `education[0].university` | 毕业学校名称       |
+| 专业 / 所学专业              | `education[0].major`      | 专业名称           |
+| 毕业时间 / 毕业日期          | `education[0].endDate`    | 毕业年月           |
+| GPA / 绩点                   | `education[0].gpa`        | GPA成绩            |
+| 公司 / 工作单位              | `experience[0].company`   | 公司名称           |
+| 职位 / 岗位                  | `experience[0].position`  | 职位名称           |
+| 技能证书 / 资格证书          | `skills.certificates`     | 证书列表           |
+| 专业技能 / 技能掌握          | `skills.professional`     | 技能描述           |
+| 自我评价 / 个人评价          | `selfEvaluation`          | 自我评价           |
 
 ---
 
@@ -264,6 +277,7 @@ The skill maps document fields to a standardized JSON schema:
 ### Complete Workflow
 
 **User Request**:
+
 ```
 "我有一份入职申请表需要填写，文档名是 入职申请表.docx"
 ```
@@ -271,6 +285,7 @@ The skill maps document fields to a standardized JSON schema:
 **Agent Actions**:
 
 **1. Extract Text**
+
 ```bash
 python {baseDir}/scripts/template_generator.py \
   --action extract \
@@ -285,12 +300,32 @@ Read `temp/extracted_text.txt`, send to Minimax API with the prompt template, pa
 ```json
 {
   "fields": [
-    {"location": "第1段", "fieldName": "姓名", "standardPath": "basic.name", "required": true},
-    {"location": "第2段", "fieldName": "性别", "standardPath": "basic.gender", "required": true},
-    {"location": "第3段", "fieldName": "出生日期", "standardPath": "basic.birthDate", "required": true},
-    {"location": "第4段", "fieldName": "身份证号", "standardPath": "basic.idCard", "required": true},
-    {"location": "第5段", "fieldName": "联系电话", "standardPath": "basic.phone", "required": true},
-    {"location": "第6段", "fieldName": "毕业院校", "standardPath": "education.university", "required": false}
+    { "location": "第1段", "fieldName": "姓名", "standardPath": "basic.name", "required": true },
+    { "location": "第2段", "fieldName": "性别", "standardPath": "basic.gender", "required": true },
+    {
+      "location": "第3段",
+      "fieldName": "出生日期",
+      "standardPath": "basic.birthDate",
+      "required": true
+    },
+    {
+      "location": "第4段",
+      "fieldName": "身份证号",
+      "standardPath": "basic.idCard",
+      "required": true
+    },
+    {
+      "location": "第5段",
+      "fieldName": "联系电话",
+      "standardPath": "basic.phone",
+      "required": true
+    },
+    {
+      "location": "第6段",
+      "fieldName": "毕业院校",
+      "standardPath": "education.university",
+      "required": false
+    }
   ]
 }
 ```
@@ -298,6 +333,7 @@ Read `temp/extracted_text.txt`, send to Minimax API with the prompt template, pa
 Save to `temp/fields.json`.
 
 **3. Generate Template**
+
 ```bash
 python {baseDir}/scripts/template_generator.py \
   --action generate \
@@ -307,6 +343,7 @@ python {baseDir}/scripts/template_generator.py \
 ```
 
 **4. Report to User**
+
 ```
 ✅ 文档分析完成！
 
@@ -330,6 +367,7 @@ python {baseDir}/scripts/template_generator.py \
 ### Python Dependencies
 
 Create `{baseDir}/scripts/requirements.txt`:
+
 ```
 python-docx==0.8.11
 ```
@@ -337,6 +375,7 @@ python-docx==0.8.11
 ### Installation
 
 When the skill is first used, run:
+
 ```bash
 pip install -r {baseDir}/scripts/requirements.txt
 ```
@@ -365,6 +404,7 @@ Options:
 ```
 
 **Functions**:
+
 - `extract_text(input_docx, output_text)`: Extract all text from Word document
 - `generate_template(input_docx, fields_json, output_docx)`: Generate template with placeholders
 
@@ -375,36 +415,48 @@ Options:
 ### Common Errors
 
 **1. python-docx not installed**
+
 ```
 ModuleNotFoundError: No module named 'docx'
 ```
+
 **Solution**:
+
 ```bash
 pip install python-docx
 ```
 
 **2. Input file not found**
+
 ```
 FileNotFoundError: [Errno 2] No such file or directory: '...'
 ```
+
 **Solution**:
+
 - Check file path is correct
 - Ensure file exists in `uploads/` directory
 - Use absolute path starting with `~/.openclaw/workspace-person-info/`
 
 **3. Invalid .docx file**
+
 ```
 BadZipFile: File is not a zip file
 ```
+
 **Solution**:
+
 - Ensure file is in .docx format (not .doc or .pdf)
 - Try opening and re-saving the file in Microsoft Word
 
 **4. Fields JSON parsing error**
+
 ```
 JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 ```
+
 **Solution**:
+
 - Verify LLM response is valid JSON
 - Check `fields.json` file format
 - Manually fix JSON syntax errors if needed
@@ -418,6 +470,7 @@ JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 If the LLM's field identification is incomplete, allow manual adjustments:
 
 **Edit fields.json**:
+
 ```json
 {
   "fields": [
@@ -445,9 +498,9 @@ for doc in uploads/*.docx; do
     --action extract \
     --input "$doc" \
     --output "temp/${basename}_text.txt"
-  
+
   # [Call LLM to identify fields...]
-  
+
   python {baseDir}/scripts/template_generator.py \
     --action generate \
     --input "$doc" \
@@ -463,7 +516,7 @@ done
 1. **Document Preparation**:
    - Use well-formatted Word documents with clear field labels
    - Avoid complex nested tables (they're harder to analyze)
-   - Use consistent formatting (e.g., "Field Name: ____")
+   - Use consistent formatting (e.g., "Field Name: \_\_\_\_")
 
 2. **LLM Prompt Optimization**:
    - Provide clear examples of field names in the prompt

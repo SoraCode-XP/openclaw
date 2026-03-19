@@ -1,7 +1,24 @@
 ---
 name: word-doc-filler
 description: 读取 Word 模板，识别字段占位符，使用个人信息 JSON 自动填充
-metadata: {"openclaw": {"emoji": "📝", "requires": {"bins": ["python3"]}, "install": [{"id": "pip", "kind": "node", "bins": ["python3"], "packages": ["python-docx"], "label": "安装 Python 依赖 python-docx"}]}}
+metadata:
+  {
+    "openclaw":
+      {
+        "emoji": "📝",
+        "requires": { "bins": ["python3"] },
+        "install":
+          [
+            {
+              "id": "pip",
+              "kind": "node",
+              "bins": ["python3"],
+              "packages": ["python-docx"],
+              "label": "安装 Python 依赖 python-docx",
+            },
+          ],
+      },
+  }
 ---
 
 # Word Document Filler
@@ -9,6 +26,7 @@ metadata: {"openclaw": {"emoji": "📝", "requires": {"bins": ["python3"]}, "ins
 ## 功能说明
 
 这个技能自动将个人信息填充到 Word 文档模板中：
+
 - 读取 Word 模板文件（`.docx` 格式）
 - 识别模板中的字段占位符（格式：`${字段名}`）
 - 使用个人信息 JSON 数据填充这些字段
@@ -19,11 +37,13 @@ metadata: {"openclaw": {"emoji": "📝", "requires": {"bins": ["python3"]}, "ins
 ### 1. 安装 Python 依赖
 
 首次使用前，安装 python-docx 库：
+
 ```bash
 pip install -r {baseDir}/scripts/requirements.txt
 ```
 
 或直接安装：
+
 ```bash
 pip install python-docx
 ```
@@ -31,6 +51,7 @@ pip install python-docx
 ### 2. 准备目录结构
 
 确保以下目录存在：
+
 ```bash
 mkdir -p ~/Documents/openclaw-templates  # 用户放置模板的目录
 mkdir -p ~/Documents/openclaw-filled     # 填充后文档的输出目录
@@ -43,6 +64,7 @@ mkdir -p ~/Documents/openclaw-filled     # 填充后文档的输出目录
 创建 Word 模板，使用 `${字段名}` 格式作为占位符：
 
 **模板示例**（resume-template.docx）：
+
 ```
 个人简历
 
@@ -70,6 +92,7 @@ ${工作经历}
 ### 步骤 3: 执行填充
 
 使用 bash 工具调用 Python 脚本：
+
 ```bash
 python {baseDir}/scripts/word_processor.py \
   --template ~/Documents/openclaw-templates/resume-template.docx \
@@ -80,6 +103,7 @@ python {baseDir}/scripts/word_processor.py \
 ### 步骤 4: 确认结果
 
 告知用户填充后的文档位置：
+
 ```
 "填充完成！文档已保存到：
 ~/Documents/openclaw-filled/resume-zhangsan-filled.docx
@@ -91,27 +115,28 @@ python {baseDir}/scripts/word_processor.py \
 
 ### 简单字段映射
 
-| 模板占位符 | JSON 路径 | 示例值 |
-|-----------|----------|--------|
-| `${姓名}` | `basic.name` | 张三 |
-| `${性别}` | `basic.gender` | 男 |
-| `${出生日期}` | `basic.birthDate` | 1990-01-15 |
-| `${联系电话}` | `basic.phone` | 13800138000 |
-| `${电子邮箱}` | `basic.email` | zhangsan@example.com |
-| `${身份证号}` | `basic.idCard` | 110101199001150011 |
-| `${现居地址}` | `address.current` | 北京市朝阳区XX路XX号 |
-| `${户籍地址}` | `address.registered` | 河北省石家庄市XX区XX路XX号 |
-| `${邮政编码}` | `address.postalCode` | 100000 |
-| `${学历}` | `education.degree` | 本科 |
-| `${毕业院校}` | `education.university` | 北京大学 |
-| `${专业}` | `education.major` | 计算机科学与技术 |
-| `${毕业时间}` | `education.graduationDate` | 2012-06 |
+| 模板占位符    | JSON 路径                  | 示例值                     |
+| ------------- | -------------------------- | -------------------------- |
+| `${姓名}`     | `basic.name`               | 张三                       |
+| `${性别}`     | `basic.gender`             | 男                         |
+| `${出生日期}` | `basic.birthDate`          | 1990-01-15                 |
+| `${联系电话}` | `basic.phone`              | 13800138000                |
+| `${电子邮箱}` | `basic.email`              | zhangsan@example.com       |
+| `${身份证号}` | `basic.idCard`             | 110101199001150011         |
+| `${现居地址}` | `address.current`          | 北京市朝阳区XX路XX号       |
+| `${户籍地址}` | `address.registered`       | 河北省石家庄市XX区XX路XX号 |
+| `${邮政编码}` | `address.postalCode`       | 100000                     |
+| `${学历}`     | `education.degree`         | 本科                       |
+| `${毕业院校}` | `education.university`     | 北京大学                   |
+| `${专业}`     | `education.major`          | 计算机科学与技术           |
+| `${毕业时间}` | `education.graduationDate` | 2012-06                    |
 
 ### 复杂字段：工作经历
 
 工作经历是数组类型，需要特殊处理。在模板中使用 `${工作经历}` 占位符，脚本会自动格式化为列表：
 
 **JSON 数据**：
+
 ```json
 "experience": [
   {
@@ -132,6 +157,7 @@ python {baseDir}/scripts/word_processor.py \
 ```
 
 **填充后的格式**：
+
 ```
 1. XX科技有限公司 | 软件工程师 | 2012-07 ~ 2015-08
    负责后端开发和系统维护
@@ -229,11 +255,13 @@ python ~/.openclaw/workspace-person-info/skills/word-doc-filler/scripts/word_pro
 ### 错误 1：模板文件不存在
 
 **症状**：
+
 ```
 FileNotFoundError: [Errno 2] No such file or directory: '~/Documents/openclaw-templates/template.docx'
 ```
 
 **解决**：
+
 1. 确认模板文件在正确的目录
 2. 检查文件名拼写
 3. 确认文件扩展名是 `.docx`
@@ -251,6 +279,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '~/Documents/openclaw-te
 **症状**：模板中的某些字段未被填充（保留 `${字段名}`）
 
 **解决**：
+
 1. 检查 JSON 文件是否包含对应字段
 2. 确认字段路径正确
 
@@ -269,11 +298,13 @@ FileNotFoundError: [Errno 2] No such file or directory: '~/Documents/openclaw-te
 ### 错误 3：python-docx 未安装
 
 **症状**：
+
 ```
 ModuleNotFoundError: No module named 'docx'
 ```
 
 **解决**：
+
 ```bash
 pip install python-docx
 ```
@@ -292,12 +323,14 @@ pip install -r ~/.openclaw/workspace-person-info/skills/word-doc-filler/scripts/
 ### 推荐的占位符名称
 
 使用清晰、直观的中文名称：
+
 - `${姓名}` ✅
 - `${性别}` ✅
 - `${联系电话}` ✅
 - `${毕业院校}` ✅
 
 避免使用：
+
 - `${name}` ❌（使用英文不直观）
 - `${xingming}` ❌（拼音不清晰）
 - `${field1}` ❌（无意义的编号）
@@ -309,11 +342,13 @@ pip install -r ~/.openclaw/workspace-person-info/skills/word-doc-filler/scripts/
 - 字段名区分大小写
 
 正确示例：
+
 - `${姓名}` ✅
 - `${联系电话}` ✅
 - `${毕业时间}` ✅
 
 错误示例：
+
 - `[姓名]` ❌（格式错误）
 - `${姓 名}` ❌（包含空格）
 - `$姓名$` ❌（格式错误）
@@ -326,6 +361,7 @@ pip install -r ~/.openclaw/workspace-person-info/skills/word-doc-filler/scripts/
 如果需要更复杂的字段映射规则，可以扩展脚本支持映射配置文件：
 
 **mapping.json**：
+
 ```json
 {
   "${全名}": "basic.name",
@@ -384,11 +420,13 @@ open ~/Documents/openclaw-filled/resume-zhangsan-filled.docx
 ```
 
 ### 检查依赖安装
+
 ```bash
 python -c "import docx; print('python-docx 已安装')"
 ```
 
 ### 查看 JSON 数据
+
 ```bash
 cat persons/zhangsan-20260315.json | python -m json.tool
 ```

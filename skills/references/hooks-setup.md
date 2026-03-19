@@ -5,6 +5,7 @@ Configure automatic self-improvement triggers for AI coding agents.
 ## Overview
 
 Hooks enable proactive learning capture by injecting reminders at key moments:
+
 - **UserPromptSubmit**: Reminder after each prompt to evaluate learnings
 - **PostToolUse (Bash)**: Error detection when commands fail
 
@@ -117,6 +118,7 @@ Copilot doesn't support hooks directly. Instead, add guidance to `.github/copilo
 ## Self-Improvement
 
 After completing tasks that involved:
+
 - Debugging non-obvious issues
 - Discovering workarounds
 - Learning project-specific patterns
@@ -194,6 +196,7 @@ If the activator feels intrusive:
 ## Hook Output Budget
 
 The activator is designed to be lightweight:
+
 - **Target**: ~50-100 tokens per activation
 - **Content**: Structured reminder, not verbose instructions
 - **Format**: XML tags for easy parsing
@@ -212,6 +215,7 @@ If you need to reduce overhead further, you can edit `activator.sh` to output le
 To temporarily disable without removing configuration:
 
 1. **Comment out in settings**:
+
 ```json
 {
   "hooks": {

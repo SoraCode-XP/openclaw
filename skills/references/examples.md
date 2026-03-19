@@ -13,19 +13,23 @@ Concrete examples of well-formatted entries with all fields.
 **Area**: tests
 
 ### Summary
+
 Incorrectly assumed pytest fixtures are scoped to function by default
 
 ### Details
-When writing test fixtures, I assumed all fixtures were function-scoped. 
-User corrected that while function scope is the default, the codebase 
-convention uses module-scoped fixtures for database connections to 
+
+When writing test fixtures, I assumed all fixtures were function-scoped.
+User corrected that while function scope is the default, the codebase
+convention uses module-scoped fixtures for database connections to
 improve test performance.
 
 ### Suggested Action
-When creating fixtures that involve expensive setup (DB, network), 
+
+When creating fixtures that involve expensive setup (DB, network),
 check existing fixtures for scope patterns before defaulting to function scope.
 
 ### Metadata
+
 - Source: user_feedback
 - Related Files: tests/conftest.py
 - Tags: pytest, testing, fixtures
@@ -44,22 +48,27 @@ check existing fixtures for scope patterns before defaulting to function scope.
 **Area**: config
 
 ### Summary
+
 Project uses pnpm not npm for package management
 
 ### Details
+
 Attempted to run `npm install` but project uses pnpm workspaces.
 Lock file is `pnpm-lock.yaml`, not `package-lock.json`.
 
 ### Suggested Action
+
 Check for `pnpm-lock.yaml` or `pnpm-workspace.yaml` before assuming npm.
 Use `pnpm install` for this project.
 
 ### Metadata
+
 - Source: error
 - Related Files: pnpm-lock.yaml, pnpm-workspace.yaml
 - Tags: package-manager, pnpm, setup
 
 ### Resolution
+
 - **Resolved**: 2025-01-15T14:30:00Z
 - **Commit/PR**: N/A - knowledge update
 - **Notes**: Added to CLAUDE.md for future reference
@@ -79,17 +88,21 @@ Use `pnpm install` for this project.
 **Area**: backend
 
 ### Summary
+
 API responses must include correlation ID from request headers
 
 ### Details
-All API responses should echo back the X-Correlation-ID header from 
-the request. This is required for distributed tracing. Responses 
+
+All API responses should echo back the X-Correlation-ID header from
+the request. This is required for distributed tracing. Responses
 without this header break the observability pipeline.
 
 ### Suggested Action
+
 Always include correlation ID passthrough in API handlers.
 
 ### Metadata
+
 - Source: user_feedback
 - Related Files: src/middleware/correlation.ts
 - Tags: api, observability, tracing
@@ -109,17 +122,21 @@ Always include correlation ID passthrough in API handlers.
 **Area**: backend
 
 ### Summary
+
 Must regenerate API client after OpenAPI spec changes
 
 ### Details
+
 When modifying API endpoints, the TypeScript client must be regenerated.
 Forgetting this causes type mismatches that only appear at runtime.
 The generate script also runs validation.
 
 ### Suggested Action
+
 Add to agent workflow: after any API changes, run `pnpm run generate:api`.
 
 ### Metadata
+
 - Source: error
 - Related Files: openapi.yaml, src/client/api.ts
 - Tags: api, codegen, typescript
@@ -138,11 +155,14 @@ Add to agent workflow: after any API changes, run `pnpm run generate:api`.
 **Area**: infra
 
 ### Summary
+
 Docker build fails on M1 Mac due to platform mismatch
 
 ### Error
 ```
+
 error: failed to solve: python:3.11-slim: no match for platform linux/arm64
+
 ```
 
 ### Context
@@ -172,11 +192,14 @@ Or update Dockerfile: `FROM --platform=linux/amd64 python:3.11-slim`
 **Area**: backend
 
 ### Summary
+
 Third-party payment API timeout during checkout
 
 ### Error
 ```
+
 TimeoutError: Request to payments.example.com timed out after 30000ms
+
 ```
 
 ### Context
@@ -206,20 +229,25 @@ Implement retry with exponential backoff. Consider circuit breaker pattern.
 **Area**: backend
 
 ### Requested Capability
+
 Export analysis results to CSV format
 
 ### User Context
-User runs weekly reports and needs to share results with non-technical 
+
+User runs weekly reports and needs to share results with non-technical
 stakeholders in Excel. Currently copies output manually.
 
 ### Complexity Estimate
+
 simple
 
 ### Suggested Implementation
+
 Add `--output csv` flag to the analyze command. Use standard csv module.
 Could extend existing `--output json` pattern.
 
 ### Metadata
+
 - Frequency: recurring
 - Related Features: analyze command, json output
 
@@ -237,24 +265,30 @@ Could extend existing `--output json` pattern.
 **Area**: frontend
 
 ### Requested Capability
+
 Dark mode support for the dashboard
 
 ### User Context
+
 User works late hours and finds the bright interface straining.
 Several other users have mentioned this informally.
 
 ### Complexity Estimate
+
 medium
 
 ### Suggested Implementation
+
 Use CSS variables for colors. Add toggle in user settings.
 Consider system preference detection.
 
 ### Metadata
+
 - Frequency: recurring
 - Related Features: user settings, theme system
 
 ### Resolution
+
 - **Resolved**: 2025-01-18T16:00:00Z
 - **Commit/PR**: #142
 - **Notes**: Implemented with system preference detection and manual toggle
@@ -274,18 +308,22 @@ Consider system preference detection.
 **Area**: infra
 
 ### Summary
+
 Docker build fails on Apple Silicon due to platform mismatch
 
 ### Details
+
 When building Docker images on M1/M2 Macs, the build fails because
 the base image doesn't have an ARM64 variant. This is a common issue
 that affects many developers.
 
 ### Suggested Action
+
 Add `--platform linux/amd64` to docker build command, or use
 `FROM --platform=linux/amd64` in Dockerfile.
 
 ### Metadata
+
 - Source: error
 - Related Files: Dockerfile
 - Tags: docker, arm64, m1, apple-silicon
@@ -312,10 +350,10 @@ Solutions for Docker build issues on Apple Silicon Macs.
 
 ## Quick Reference
 
-| Error | Fix |
-|-------|-----|
-| `no match for platform linux/arm64` | Add `--platform linux/amd64` to build |
-| Image runs but crashes | Use emulation or find ARM-compatible base |
+| Error                               | Fix                                       |
+| ----------------------------------- | ----------------------------------------- |
+| `no match for platform linux/arm64` | Add `--platform linux/amd64` to build     |
+| Image runs but crashes              | Use emulation or find ARM-compatible base |
 
 ## The Problem
 
@@ -347,18 +385,18 @@ Add platform to your service:
 
 \`\`\`yaml
 services:
-  app:
-    platform: linux/amd64
-    build: .
+app:
+platform: linux/amd64
+build: .
 \`\`\`
 
 ## Trade-offs
 
-| Approach | Pros | Cons |
-|----------|------|------|
-| Build flag | No file changes | Must remember flag |
+| Approach   | Pros                | Cons               |
+| ---------- | ------------------- | ------------------ |
+| Build flag | No file changes     | Must remember flag |
 | Dockerfile | Explicit, versioned | Affects all builds |
-| Compose | Convenient for dev | Requires compose |
+| Compose    | Convenient for dev  | Requires compose   |
 
 ## Performance Note
 
